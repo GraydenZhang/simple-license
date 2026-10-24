@@ -1,0 +1,24 @@
+# Explicit allowlist keeps signing tools, secrets and local data out of build context.
+**
+!Dockerfile
+!requirements-production.txt
+!requirements-build.txt
+!school_permit.py
+!app/
+!app/**
+!scripts/
+!scripts/**
+!build_support/
+!build_support/**
+**/__pycache__/
+**/*.pyc
+**/*.pem
+**/*.key
+**/*.lic
+**/*.p12
+**/*.pfx
+**/.env
+**/.env.*
+**/*.map
+**/tests/
+**/.git/

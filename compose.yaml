@@ -1,0 +1,3 @@
+# Compatibility entry point; customer delivery uses docker-compose.yml.
+include:
+  - docker-compose.yml

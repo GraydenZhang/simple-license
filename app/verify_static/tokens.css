@@ -1,0 +1,11 @@
+/* Shared campus design tokens. Keep verify_static/tokens.css identical. */
+:root{
+  --navy:#142f43;--navy-deep:#102638;--teal:#146c5c;--teal-dark:#0c5346;
+  --bg:#f3f6f9;--surface:#fff;--ink:#193347;--muted:#526779;--line:#dce5ec;
+  --danger:#ab343e;--success:#146345;--warning:#855609;--focus:#096eab;
+  --radius:12px;--radius-lg:18px;--shadow:0 4px 20px #18364b06;
+  --space-1:4px;--space-2:8px;--space-3:12px;--space-4:16px;--space-6:24px;--space-8:32px;
+  --bs-body-font-family:"Segoe UI","Microsoft YaHei",system-ui,sans-serif;
+  --bs-primary:#146c5c;--bs-body-color:#193347;--bs-border-radius:8px;
+  color-scheme:light;
+}

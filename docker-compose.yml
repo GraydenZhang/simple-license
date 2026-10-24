@@ -1,0 +1,62 @@
+name: school-permit
+x-app: &application
+  image: school-permit:${SCHOOL_PERMIT_VERSION:?Set SCHOOL_PERMIT_VERSION}
+  platform: linux/amd64
+  env_file: .env
+  environment:
+    DATABASE_URL: postgresql+psycopg://permits:${DB_PASSWORD:?Set DB_PASSWORD}@db:5432/permits
+    DATA_DIR: /var/lib/campus-permits
+    LICENSE_FILE: /run/school-permit-license/license.lic
+    HOST_MACHINE_ID_FILE: /run/host-machine-id
+  read_only: true
+  tmpfs:
+    - /tmp:size=1g,mode=1777
+  cap_drop: [ALL]
+  security_opt: [no-new-privileges:true]
+  volumes:
+    - private:/var/lib/campus-permits
+    - type: bind
+      source: ${LICENSE_DIR:-./license}
+      target: /run/school-permit-license
+      read_only: true
+      bind:
+        create_host_path: false
+    - type: bind
+      source: /etc/machine-id
+      target: /run/host-machine-id
+      read_only: true
+      bind:
+        create_host_path: false
+services:
+  db:
+    image: postgres:16-alpine
+    platform: linux/amd64
+    environment:
+      POSTGRES_DB: permits
+      POSTGRES_USER: permits
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?Set DB_PASSWORD}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: [CMD-SHELL, 'pg_isready -U permits -d permits']
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
+  app:
+    <<: *application
+    init: true
+    ports: ['15001:15001', '15002:15002']
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+  tools:
+    <<: *application
+    command: [license-status]
+    profiles: [tools]
+    stdin_open: true
+    tty: true
+volumes:
+  pgdata:
+  private:
